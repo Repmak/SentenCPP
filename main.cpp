@@ -36,7 +36,7 @@ int main() {
         // check_and_print("Separator", special_ids.separator);
         // check_and_print("Mask", special_ids.mask);
 
-        tokenizer.encode("Thé quick ßrowñ fox jumps over the lázy dog");
+        tokenizer.encode("Thé quick ßrowñ fox   jumps over \n the lázy dog");
 
     } catch (const std::exception& e) {
         std::cerr << "Error: " << e.what() << std::endl;

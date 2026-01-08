@@ -13,9 +13,9 @@ namespace nlp::tokenizer {
         WordPiece(
             const std::string& config_path,
             const std::string& vocab_key,
-            bool lowercase,
-            bool strip_accents,
             bool clean_text,
+            bool to_lowercase,
+            bool strip_accents,
             bool handle_chinese_chars,
             std::size_t max_length
         );
@@ -28,9 +28,9 @@ namespace nlp::tokenizer {
 
     private:
         std::unique_ptr<VocabList> vocab_list_;
-        bool lowercase;
-        bool strip_accents;
         bool clean_text;
+        bool to_lowercase;
+        bool strip_accents;
         bool handle_chinese_chars;
         std::size_t max_length;
 
@@ -41,8 +41,8 @@ namespace nlp::tokenizer {
         // Splits text by regex (eg: whitespace, punctuation).
         [[nodiscard]] std::vector<std::string_view> pre_tokenize(std::string_view text) const;
 
-        void to_lowercase_inplace(std::string& text) const;
         void clean_text_inplace(std::string& text) const;
+        void to_lowercase_inplace(std::string& text) const;
         void strip_accents_inplace(std::string& text) const;
         void handle_chinese_chars_inplace(std::string& text) const;
 

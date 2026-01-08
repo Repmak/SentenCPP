@@ -18,16 +18,16 @@ namespace nlp::tokenizer {
     WordPiece::WordPiece(
         const std::string& config_path,  // Eg: "tokenizer.json".
         const std::string& vocab_key,  // Eg: "/model/vocab".
-        bool lowercase,
-        bool strip_accents,
         bool clean_text,
+        bool to_lowercase,
+        bool strip_accents,
         bool handle_chinese_chars,
         std::size_t max_length
     ) : vocab_list_(std::make_unique<VocabList>()) {
 
-        this->lowercase = lowercase;
-        this->strip_accents = strip_accents;
         this->clean_text = clean_text;
+        this->to_lowercase = to_lowercase;
+        this->strip_accents = strip_accents;
         this->handle_chinese_chars = handle_chinese_chars;
         this->max_length = max_length;
 
@@ -60,9 +60,9 @@ namespace nlp::tokenizer {
 
     std::vector<Token> WordPiece::encode(std::string_view text) const {
         std::string normalised_text(text);  // Local copy to work with.
-        if (lowercase) to_lowercase_inplace(normalised_text);
-        if (strip_accents) strip_accents_inplace(normalised_text);
         if (clean_text) clean_text_inplace(normalised_text);
+        if (to_lowercase) to_lowercase_inplace(normalised_text);
+        if (strip_accents) strip_accents_inplace(normalised_text);
         if (handle_chinese_chars) handle_chinese_chars_inplace(normalised_text);
 
         std::cout << "normalised text:" << normalised_text << std::endl;
@@ -86,13 +86,37 @@ namespace nlp::tokenizer {
         return {};
     }
 
+    void WordPiece::clean_text_inplace(std::string& text) const {
+        icu::UnicodeString ustr = icu::UnicodeString::fromUTF8(text);
+        icu::UnicodeString cleaned;
+        bool last_was_space = false;
+
+        for (int32_t i = 0; i < ustr.length(); ) {
+            UChar32 c = ustr.char32At(i);
+            int32_t next_i = ustr.moveIndex32(i, 1);
+            int8_t category = u_charType(c);
+
+            if (c == 0 || c == 0xfffd || category == U_CONTROL_CHAR || category == U_FORMAT_CHAR) {
+                // Skip.
+            } else if (u_isUWhiteSpace(c)) {
+                if (!last_was_space) {
+                    cleaned.append((UChar32)' ');
+                    last_was_space = true;
+                }
+            } else {
+                cleaned.append(c);
+                last_was_space = false;
+            }
+            i = next_i;
+        }
+
+        text.clear();
+        cleaned.toUTF8String(text);
+    }
+
     void WordPiece::to_lowercase_inplace(std::string& text) const {
         std::ranges::transform(text, text.begin(),
             [](unsigned char c) { return std::tolower(c); });
-    }
-
-    void WordPiece::clean_text_inplace(std::string& text) const {
-
     }
 
     void WordPiece::strip_accents_inplace(std::string& text) const {
