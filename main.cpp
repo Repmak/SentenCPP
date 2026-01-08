@@ -5,7 +5,7 @@
 int main() {
     try {
         nlp::tokenizer::WordPiece tokenizer(
-            "./hf_model/tokenizer.json",
+            "/Users/jkamper/CLionProjects/word-piece-tokenizer/hf_model/tokenizer.json",
             "/model/vocab",
             true,
             true,
@@ -20,26 +20,22 @@ int main() {
         std::cout << std::left << std::setw(20) << "Token" << " | " << "ID" << std::endl;
         std::cout << std::string(30, '-') << std::endl;
 
-        size_t count = 0;
         for (const auto& [token, id] : string_map) {
-            if (count++ >= 100) break;
             std::cout << std::left << std::setw(20) << token << " | " << id << std::endl;
         }
 
         std::cout << "\n--- Special Token IDs ---" << std::endl;
 
-        auto print_special = [](const std::string& name, std::uint32_t id) {
-            std::cout << std::left << std::setw(15) << name << " : ";
-            if (id) std::cout << id;
-            else    std::cout << "None";
-            std::cout << std::endl;
+        auto check_and_print = [&](const std::string& label, const std::optional<uint32_t>& id) {
+            if (id) std::cout << std::left << std::setw(15) << label << " : " << *id << std::endl;
+            else std::cout << label << " is empty" << std::endl;
         };
 
-        print_special("Padding", special_ids.padding);
-        print_special("Unknown", special_ids.unknown);
-        print_special("Classification", special_ids.classification);
-        print_special("Separator", special_ids.separator);
-        print_special("Mask", special_ids.mask);
+        check_and_print("Padding", special_ids.padding);
+        check_and_print("Unknown", special_ids.unknown);
+        check_and_print("Classification", special_ids.classification);
+        check_and_print("Separator", special_ids.separator);
+        check_and_print("Mask", special_ids.mask);
 
     } catch (const std::exception& e) {
         std::cerr << "Error: " << e.what() << std::endl;

@@ -17,7 +17,8 @@ namespace nlp::tokenizer {
         bool clean_text,
         bool handle_chinese_chars,
         std::size_t max_length
-    ) {
+    ) : vocab_list_(std::make_unique<VocabList>()) {
+
         this->lowercase = lowercase;
         this->clean_text = clean_text;
         this->handle_chinese_chars = handle_chinese_chars;

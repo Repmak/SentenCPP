@@ -1,3 +1,4 @@
+#include <iostream>
 #include "VocabList.h"
 
 namespace nlp::tokenizer {
