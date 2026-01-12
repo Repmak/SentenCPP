@@ -122,13 +122,13 @@ namespace nlp::encoder {
     }
 
     std::vector<Token> WordPiece::encode_word(std::string_view word) const {
-        std::vector<uint32_t> tokens;
+        std::vector<Token> tokens;
         size_t start = 0;
         const size_t n = word.length();
 
         // Safety check for UNK token.
         auto special_ids = vocab_list_->get_special_ids();
-        if (!special_ids.unknown.has_value()) {
+        if (!special_ids.unknown) {
             std::cerr << "Missing special token: Unknown" << std::endl;
             exit(-1);
         }
@@ -136,28 +136,37 @@ namespace nlp::encoder {
 
         while (start < n) {
             size_t end = n;
-            std::optional<uint32_t> curr_id = std::nullopt;
+            std::optional<uint32_t> best_id = std::nullopt;
+            std::string best_substr;
 
             while (start < end) {
                 std::string substr(word.substr(start, end - start));
+
                 if (start > 0) substr.insert(0, "##");
 
                 auto id = vocab_list_->token_to_id(substr);
-                if (id.has_value()) {
-                    curr_id = id;
+                if (id) {
+                    best_id = id;
+                    best_substr = std::move(substr);
                     break;
                 }
                 end--;
             }
 
-            // If any part of the word is unknown, the entire word becomes the [UNK] token.
-            if (!curr_id.has_value()) return { unknown_id };
+            // Entire word is unknown if a match cannot be found.
+            if (!best_id.has_value()) {
+                return { Token {
+                    unknown_id, std::string(word), 0, word.length(), TokenRole::Unknown
+                } };
+            }
 
-            token_ids.push_back(curr_id.value());
+            tokens.push_back(Token{
+                best_id.value(), best_substr, start, end, TokenRole::None
+            });
             start = end;
         }
 
-        return token;
+        return tokens;
     }
 
     void WordPiece::clean_text_inplace(std::string& text) const {

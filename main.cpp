@@ -1,5 +1,6 @@
 #include <iostream>
 #include <iomanip>
+#include <optional>
 #include "./encoder/include/WordPiece.h"
 
 int main() {
@@ -23,7 +24,7 @@ int main() {
         // for (const auto& [token, id] : string_map) {
         //     std::cout << std::left << std::setw(20) << token << " | " << id << std::endl;
         // }
-
+        //
         // std::cout << "\n--- Special Token IDs ---" << std::endl;
         // auto check_and_print = [&](const std::string& label, const std::optional<uint32_t>& id) {
         //     if (id) std::cout << std::left << std::setw(15) << label << " : " << *id << std::endl;
