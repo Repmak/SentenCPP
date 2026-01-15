@@ -20,10 +20,10 @@ namespace nlp::encoder {
             virtual ~EncoderInterface() = default;
 
             // Returns the total vocabulary size.
-            virtual size_t get_vocab_size() const = 0;
+            [[nodiscard]] virtual size_t get_vocab_size() const = 0;
 
             // Encodes raw text into a Token object.
-            virtual std::vector<Token> encode(std::string_view text) const = 0;
+            [[nodiscard]] virtual std::vector<Token> encode(std::string_view text) const = 0;
     };
 
 } // namespace nlp::encoder

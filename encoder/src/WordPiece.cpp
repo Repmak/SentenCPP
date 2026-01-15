@@ -22,6 +22,7 @@ namespace nlp::encoder {
         bool to_lowercase,
         bool strip_accents,
         bool handle_chinese_chars,
+        std::size_t max_input_chars_per_word,
         std::size_t max_length,
         std::string padding_token,
         std::string unknown_token,
@@ -34,6 +35,7 @@ namespace nlp::encoder {
         this->to_lowercase = to_lowercase;
         this->strip_accents = strip_accents;
         this->handle_chinese_chars = handle_chinese_chars;
+        this->max_input_chars_per_word = max_input_chars_per_word;
         this->max_length = max_length;
 
         vocab_list_->set_special_token(padding_token, TokenRole::Padding);
@@ -157,6 +159,8 @@ namespace nlp::encoder {
 
         std::string unknown_token_str = vocab_list_->get_special_token_val(TokenRole::Unknown);
         int64_t unknown_token_id = vocab_list_->token_to_id(unknown_token_str).value();
+
+        if (n >= max_input_chars_per_word) return {Token{unknown_token_id, std::string(word), 1, 0}};
 
         while (start < n) {
             size_t end = n;

@@ -18,6 +18,7 @@ namespace nlp::encoder {
                 bool to_lowercase,
                 bool strip_accents,
                 bool handle_chinese_chars,
+                std::size_t max_input_chars_per_word,
                 std::size_t max_length,
                 std::string padding_token="[PAD]",
                 std::string unknown_token="[UNK]",
@@ -37,6 +38,7 @@ namespace nlp::encoder {
             bool to_lowercase;
             bool strip_accents;
             bool handle_chinese_chars;
+            std::size_t max_input_chars_per_word;
             std::size_t max_length;
 
             // Splits text by whitespace and punctuation.
