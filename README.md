@@ -7,6 +7,18 @@ Still in development!
 SentenCPP is a C++20 library designed to replicate the ease of use of Python's `sentence-transformers`. It provides an end-to-end pipeline from raw text tokenization to vector embeddings optimised for low-latency production environments where applications would otherwise be bottlenecked by Python's interpreter.
 
 
+## Get Started
+
+
+##
+
+
+
+## Suggestions & Feedback
+
+Please feel free to open an issue or reach out!
+
+
 todo:
 - fix token segment ids
 - handle sequences which exceed max token length (use overlap and pass each batch into the onnx model)
