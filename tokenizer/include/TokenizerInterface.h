@@ -23,7 +23,7 @@ namespace sentencpp::tokenizer {
         }
     };
 
-    struct BaseConfig {
+    struct TokenizerBaseConfig {
         std::size_t max_input_chars_per_word = 100;
         std::size_t max_length = 128;
         bool to_lowercase = true;
@@ -37,16 +37,16 @@ namespace sentencpp::tokenizer {
         std::string mask_token = "[MASK]";
     };
 
-    struct WordPieceConfig : public BaseConfig {
+    struct WordPieceConfig : public TokenizerBaseConfig {
         std::string config_path;  // Path to the config file. Eg: "tokenizer.json".
         std::string vocab_key;  // Path to the vocabulary object within the config file. Eg: "/model/vocab".
     };
 
-    struct BPEConfig : public BaseConfig {
+    struct BPEConfig : public TokenizerBaseConfig {
         // todo
     };
 
-    struct UnigramConfig : public BaseConfig {
+    struct UnigramConfig : public TokenizerBaseConfig {
         // todo
     };
 

@@ -18,7 +18,6 @@ namespace sentencpp::tokenizer {
         config_(config),
         vocab_list_(std::make_unique<VocabList>())
     {
-
         vocab_list_->set_special_token(config_.padding_token, TokenRole::Padding);
         vocab_list_->set_special_token(config_.unknown_token, TokenRole::Unknown);
         vocab_list_->set_special_token(config_.classification_token, TokenRole::Classification);
@@ -74,7 +73,7 @@ namespace sentencpp::tokenizer {
         if (config_.strip_accents) strip_accents_inplace(normalised_text);
         if (config_.handle_chinese_chars) handle_chinese_chars_inplace(normalised_text);
 
-        std::cout << "Normalised text: " << normalised_text << std::endl;
+        // std::cout << "Normalised text: " << normalised_text << std::endl;
 
         std::vector<std::string_view> words = split_text(normalised_text);
         std::vector<Token> all_tokens;
@@ -225,8 +224,7 @@ namespace sentencpp::tokenizer {
     }
 
     void WordPiece::to_lowercase_inplace(std::string& text) {
-        std::ranges::transform(text, text.begin(),
-            [](unsigned char c) { return std::tolower(c); });
+        std::ranges::transform(text, text.begin(), [](unsigned char c) { return std::tolower(c); });
     }
 
     void WordPiece::strip_accents_inplace(std::string& text) {
@@ -244,7 +242,7 @@ namespace sentencpp::tokenizer {
     }
 
     void WordPiece::handle_chinese_chars_inplace(std::string& text) {
-            std::cerr << "Warning: Method handle_chinese_chars_inplace is not implemented" << std::endl;
+        std::cerr << "Warning: Method handle_chinese_chars_inplace is not implemented" << std::endl;
     }
 
 } // namespace sentencpp::tokenizer
