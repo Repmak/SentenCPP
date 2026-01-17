@@ -28,6 +28,7 @@ namespace nlp::tokenizer {
             [[nodiscard]] std::optional<std::string> id_to_token(int64_t token_id) const;
 
             [[nodiscard]] size_t size() const { return id_to_string_map_.size(); }
+            friend std::ostream& operator<<(std::ostream& os, const VocabList& instance);
 
         private:
             std::unordered_map<std::string, int64_t> string_to_id_map_;

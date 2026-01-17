@@ -1,4 +1,5 @@
 #include <iostream>
+#include <iomanip>
 #include "VocabList.h"
 
 namespace nlp::tokenizer {
@@ -26,7 +27,7 @@ namespace nlp::tokenizer {
     }
 
     std::optional<int64_t> VocabList::token_to_id(const std::string& token_str) const {
-        auto got = string_to_id_map_.find(token_str);
+        const auto got = string_to_id_map_.find(token_str);
         if (got == string_to_id_map_.end()) return std::nullopt;
         return got->second;
     }
@@ -36,6 +37,15 @@ namespace nlp::tokenizer {
         const std::string& token_str = id_to_string_map_[token_id];
         if (token_str.empty()) return std::nullopt;
         return token_str;
+    }
+
+    std::ostream& operator<<(std::ostream& os, const VocabList& instance) {
+        os << std::left << std::setw(20) << "Token" << " | " << "ID" << "\n";
+        os << std::string(30, '-') << "\n";
+        for (const auto& [token, id] : instance.string_to_id_map_) {
+            os << std::left << std::setw(20) << token << " | " << id << "\n";
+        }
+        return os;
     }
 
 } // namespace nlp::tokenizer
