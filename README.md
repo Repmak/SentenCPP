@@ -10,7 +10,7 @@ SentenCPP is a C++20 library designed to replicate the ease of use of the Python
 This section will outline all the key details to get SentenCPP working on your machine.
 
 ### 2.1 Model Compatibility
-SenteCPP supports any transformer model that uses WordPiece tokenization and follows the BERT/DistilBERT architecutre exported to ONNX. This includes models like `all-MiniLM-L6-v2` and `bert-base-uncased`. Exporting to ONNX can be done using the Hugging Face Optimum library. It provides a quick and easy way of exporting BERT models to the ONNX format.
+SentenCPP supports any transformer model that uses WordPiece tokenization and follows the BERT/DistilBERT architecutre exported to ONNX. This includes models like `all-MiniLM-L6-v2` and `bert-base-uncased`. Exporting to ONNX can be done using the Hugging Face Optimum library. It provides a quick and easy way of exporting BERT models to the ONNX format.
 
 **Step 1:** Install the following requirements.
 ```bash
