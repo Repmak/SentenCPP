@@ -20,9 +20,9 @@ pip install "optimum[onnxruntime]"
 
 **Step 2:** Run the export. Substitute `all-MiniLM-L6-v2` for a model of your choice.
 ```bash
-optimum-cli export onnx --model sentence-transformers/all-MiniLM-L6-v2 --task default sentecpp_model/
+optimum-cli export onnx --model sentence-transformers/all-MiniLM-L6-v2 --task default sentencpp_model/
 ```
-**Step 3:** Finally, your `sentecpp_model/` folder will contain the model (`model.onnx`), as well as various other files determining the model's configuration settings. These will be further addressed in section 3.
+**Step 3:** Finally, your `sentencpp_model/` folder will contain the model (`model.onnx`), as well as various other files determining the model's configuration settings. These will be further addressed in section 3.
 
 ### 2.2 Configuring ICU4C
 SentenCPP relies on `ICU4C` for text normalisation. You must ensure that CMake can locate the library on your system.
