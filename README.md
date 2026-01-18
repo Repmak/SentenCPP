@@ -116,8 +116,3 @@ Contains static methods for mathematical operations on vectors.
 ## 5. Suggestions & Feedback
 
 Please feel free to open an issue or reach out!
-
-done:
-- vocab list class for storing model's vocabulary
-- max match tokenizer (and most of the normalisation required)
-- onnx engine (basically ort wrapper) to get embeddings for a sequence of tokens
