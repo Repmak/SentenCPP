@@ -1,4 +1,5 @@
-# sentenCPP
+<p align="center"><img width="50%" src="docs/assets/sentencpp-logo.png" /></p>
+
 Still in development! (sorry the content below is also not done yet!)
 
 <br/>
