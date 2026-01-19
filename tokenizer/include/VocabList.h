@@ -22,7 +22,7 @@ namespace sentencpp::tokenizer {
             [[nodiscard]] const std::vector<std::string>& get_id_to_string_map() const { return id_to_string_map_; }
 
             [[nodiscard]] const std::unordered_map<TokenRole, std::string>& get_special_tokens_map_() const { return special_tokens_map_; }
-            [[nodiscard]] const std::string get_special_token_val(const TokenRole token_role) const { return special_tokens_map_.at(token_role); }
+            [[nodiscard]] std::string get_special_token_val(const TokenRole token_role) const { return special_tokens_map_.at(token_role); }
 
             [[nodiscard]] std::optional<int64_t> token_to_id(const std::string& token_str) const;
             [[nodiscard]] std::optional<std::string> id_to_token(int64_t token_id) const;
