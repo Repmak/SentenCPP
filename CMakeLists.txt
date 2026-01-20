@@ -51,6 +51,7 @@ target_include_directories(sentencpp
             $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/tokenizer/include>
             $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/inference/include>
             $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/embedding_utils/include>
+            $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
 )
 
 target_link_libraries(sentencpp
