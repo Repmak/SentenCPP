@@ -1,69 +1,105 @@
 <p align="center"><img width="40%" src="docs/assets/sentencpp-logo.png" /></p>
 
-Still in development!
+## Overview
+**sentenCPP** is a C++20 library designed to replicate the functionality and ease of use of the Python library `sentence-transformers`. It provides a complete pipeline from **text tokenization** to **vector embeddings**, extending to **mathematical operations** for analysis.
 
-todo:
-- write up api reference in a separate webpage for better clarity (it is a mess below!)
-- set token segment ids to the correct value depending on use case (segment ids are always set to 0 right now)
-- handle sequences which exceed max token length (use overlap and pass each batch into the onnx model)
-- use prefix trie to avoid o(n^2) of max match algo
-
-todo for much later?
-- implement bpe and unigram tokenizers (for compatibility with other model architectures)
-- support bin/h5 files?
-
-## 1. Overview
-sentenCPP is a C++20 library designed to replicate the ease of use of the Python library sentence-transformers. It provides a complete pipeline from text tokenization to vector embeddings, extending to mathematical operations for analysis.
-
-<br/>
-
-## 2. Getting Started
-This section will outline all the key details to get sentenCPP working on your machine.
+While NLP in C++ is entirely possible using various high-performance tools, the process of manually stitching these libraries together is often time-consuming and complex. **sentenCPP** is not intended to replace hyper-specialised libraries. It aims to eliminate the friction inherent to C++ development.
 
 
-### 2.1 Model Compatibility
-sentenCPP supports any transformer model that uses WordPiece tokenization and follows the BERT/DistilBERT architecture exported to ONNX. This includes models like `all-MiniLM-L6-v2` and `bert-base-uncased`. Exporting to ONNX can be done using Hugging Face Optimum. It provides a quick and easy way of exporting models to the ONNX format.
+## Development Status
+This project is still in development. As of right now, BERT, RoBERTa, and DistilBERT models are supported by the inference engine. Furthermore, the engine can perform semantic search, semantic analysis, and named entity extraction, but does not yet support autoregressive text generation or cross-encoding tasks. 
 
-**Step 1**: Install the following requirements.
-```bash
-pip install "optimum[exporters]"
-pip install "optimum[onnxruntime]"
+
+## Getting Started
+This section will help you integrate **sentenCPP** into your first project. For more detailed information, please visit: [**sentenCPP - Documentation**](https://repmak.github.io/#/sentencpp-docs/).
+
+#### 1. Prerequisites
+Before installing **sentenCPP**, you need to set up two core dependencies:
+
+- ICU (International Components for Unicode): Required for text normalisation. This can be installed via your package manager for macOS and Linux. For Windows, download the binary directly from the [**ICU Releases**](https://github.com/unicode-org/icu/releases).
+- ONNX Runtime: This is the engine used to run the machine learning models. This can be download directly from the [**ONNX Runtime Releases**](https://github.com/microsoft/onnxruntime/releases). Extract it to a known directory.
+
+#### 2. CMake Setup
+The easiest way to include **sentenCPP** in your project is using CMake's `FetchContent` module. This will also automatically handle the `nlohmann_json` dependency.
+
+```CMake
+cmake_minimum_required(VERSION 3.20)
+project(my_app LANGUAGES CXX)
+set(CMAKE_CXX_STANDARD 20)
+
+include(FetchContent)
+FetchContent_Declare(
+        sentencpp
+        GIT_REPOSITORY https://github.com/Repmak/sentenCPP.git
+        GIT_TAG main
+)
+FetchContent_MakeAvailable(sentencpp)
+
+add_executable(my_app main.cpp)
+target_link_libraries(my_app PRIVATE sentencpp)
 ```
 
-**Step 2**: Run the export, substituting `all-MiniLM-L6-v2` for a model of your choice.
-```bash
-optimum-cli export onnx --model sentence-transformers/all-MiniLM-L6-v2 --task default sentencpp_model/
-```
-
-**Step 3**: Finally, your `sentencpp_model/` folder will contain the model (`model.onnx`), as well as various other files determining the model's configuration settings.
-
-### 2.2 Configuring ICU4C
-sentenCPP relies on ICU4C for text normalisation. If you already have ICU4C in your system's default library path you may be able to skip the steps below.
-
-**Step 1**: Run the following build, substituting `PATH_TO_ICU` with the appropriate `ICU_ROOT` for your operating system. For example, on macOS (Homebrew), this will be `/opt/homebrew/opt/icu4c`.
+#### 3. Configuring & Building
+When building, you must provide the paths to your ICU and ONNX Runtime installations. Run the following commands from your project root:
 ```bash
 mkdir build && cd build
-cmake .. -DICU_ROOT=<PATH_TO_ICU>  # Substitute!
+
+cmake .. \
+  -DICU_ROOT=/path/to/your/icu4c \
+  -DONNXRUNTIME_ROOT=/path/to/your/onnxruntime-osx-arm64-1.23.2
+
 cmake --build .
 ```
 
-**Step 2**: Within CLion, navigate to `Settings` > `Build, Execution, Deployment` > `CMake`.
+**Note:** If you have already configured `ICU_ROOT` and `ONNXRUNTIME_ROOT` as CMake options within your IDE, you do not need to pass them via the command line.
 
-**Step 3**: Set the `CMake Options` field to `-DICU_ROOT=/opt/homebrew/opt/icu4c`.
+#### 4. Downloading the ONNX model
+The Hugging Face optimum library can be used to export a model to the ONNX format. Install the dependencies and export the model using:
+```bash
+pip install "optimum[exporters]"
+pip install "optimum[onnxruntime]"
 
-### 2.3 Other library dependencies
-todo
+optimum-cli export onnx --model sentence-transformers/all-MiniLM-L6-v2 --task default sentencpp_model/
+```
 
-<br/>
+#### 5. All Done!
+The following snippet demonstrates how to tokenize text, generate embeddings, and calculate the cosine similarity between two sentences. Ensure the paths to `tokenizer.json` and `model.onnx` have been updated.
 
-## 3. Example Usage
-todo
+```C++
+#include <iostream>
+#include <sentencpp/tokenizer/WordPiece.h>
+#include <sentencpp/inference/OnnxEngine.h>
+#include <sentencpp/embedding_utils/VectorMaths.h>
 
-<br/>
+int main() {
+    sentencpp::tokenizer::WordPieceConfig config;
+    config.config_path = "/path/to/your/sentence-transformers-all-mini-lm-l6-v2/tokenizer.json";
+    const sentencpp::tokenizer::WordPiece tokenizer(config);
 
-## 4. API Reference
-[**API Reference**](https://repmak.github.io/#/sentencpp-docs/)
+    const std::string sentence_1 = "The cat sits outside";
+    const std::string sentence_2 = "A feline is resting outdoors";
 
-## 5. Suggestions & Feedback
+    const auto tokens_1 = tokenizer.tokenize(sentence_1);
+    const auto tokens_2 = tokenizer.tokenize(sentence_2);
+
+    sentencpp::inference::ModelConfig model_config;
+    model_config.model_path = "/path/to/your/sentence-transformers-all-mini-lm-l6-v2/model.onnx";
+    sentencpp::inference::OnnxEngine engine(model_config);
+
+    std::vector<std::vector<float>> embeddings_1 = engine.encode(tokens_1);
+    std::vector<std::vector<float>> embeddings_2 = engine.encode(tokens_2);
+
+    auto vector_1 = sentencpp::embedding_utils::VectorMaths::mean_pooling(embeddings_1, tokens_1);
+    auto vector_2 = sentencpp::embedding_utils::VectorMaths::mean_pooling(embeddings_2, tokens_2);
+
+    float similarity = sentencpp::embedding_utils::VectorMaths::cosine_similarity(vector_1, vector_2);
+    std::cout << "Similarity Score: " << similarity << std::endl;
+
+    return 0;
+}
+```
+
+
+## Suggestions & Feedback
 
 Please feel free to open an issue or reach out!
