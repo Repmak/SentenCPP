@@ -54,7 +54,7 @@ cmake --build .
 **Note:** If you have already configured `ICU_ROOT` and `ONNXRUNTIME_ROOT` as CMake options within your IDE, you do not need to pass them via the command line.
 
 #### 4. Downloading the ONNX model
-The Hugging Face optimum library can be used to export a model to the ONNX format. Install the dependencies and export the model using:
+The Hugging Face `optimum` library can be used to export a model to the ONNX format. Install the dependencies and export the model using:
 ```bash
 pip install "optimum[exporters]"
 pip install "optimum[onnxruntime]"
