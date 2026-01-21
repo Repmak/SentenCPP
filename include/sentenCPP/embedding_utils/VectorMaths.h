@@ -16,7 +16,7 @@ namespace sentencpp::embedding_utils {
             static std::vector<float> min_pooling(
                 const std::vector<std::vector<float>>& token_embeddings,
                 const std::vector<tokenizer::Token>& original_tokens
-                );
+            );
 
             //
             static std::vector<float> max_pooling(

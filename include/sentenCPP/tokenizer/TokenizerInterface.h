@@ -8,10 +8,10 @@
 namespace sentencpp::tokenizer {
 
     struct Token {
-        int64_t id;              // The numerical ID according to the model's vocabulary.
+        int64_t id;              // The numerical ID according to the model's vocabulary. Must be int64_t to be compatible with ORT.
         std::string text;        // The original string representation (not strictly needed by the Onnx model).
-        int64_t attention_mask;  // 1 for real tokens, 0 for padding.
-        int64_t segment_id;      // Defines what sentence the token belongs to.
+        int64_t attention_mask;  // 1 for real tokens, 0 for padding. Must be int64_t to be compatible with ORT.
+        int64_t segment_id;      // Defines what sentence the token belongs to. Must be int64_t to be compatible with ORT.
 
         friend std::ostream& operator<<(std::ostream& os, const Token& instance) {
             os << "id: " << instance.id
